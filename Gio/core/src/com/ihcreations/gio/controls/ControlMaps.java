@@ -29,10 +29,12 @@ public class ControlMaps {
 		m_right_is_pressed = true;
 		m_gioman.startMovingRight();
 	}
+	
 	public void keyDownLeft() {
 		m_left_is_pressed = true;
 		m_gioman.startMovingLeft();
 	}
+	
 	public void keyUpRight() {
 		m_right_is_pressed = false;
 		if(m_left_is_pressed) {
@@ -41,6 +43,7 @@ public class ControlMaps {
 			m_gioman.stopHorizontalMovement();
 		}
 	}
+	
 	public void keyUpLeft() {
 		m_left_is_pressed = false;
 		if(m_right_is_pressed) {
@@ -49,9 +52,11 @@ public class ControlMaps {
 			m_gioman.stopHorizontalMovement();
 		}
 	}
+	
 	public void speedUp() {
 		m_gioman.accelerate();
 	}
+	
 	public void slowDown() {
 		m_gioman.stopAcceleration();
 	}

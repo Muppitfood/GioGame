@@ -53,7 +53,6 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 			m_game.gamepad.addListener(this);
 		}
 		
-		
 		// Add Input listener to this screen
 		Gdx.input.setInputProcessor(this);
 	}
@@ -85,42 +84,27 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		fps_logger.log();
 	}
 
+	// Unused Screen implementation overrides
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
+	// Inuse keyboard input functions
 	@Override
 	public boolean keyDown(int keycode) {
 		switch(keycode) {
@@ -168,55 +152,42 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		}
 		return false;
 	}
-
+	
+	// Unused keyboard input functions
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
+	// Unused Controller connection functions
 	@Override
 	public void connected(Controller controller) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void disconnected(Controller controller) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	// Inuse Controller input functions
 	@Override
 	public boolean buttonDown(Controller controller, int buttonCode) {
 		switch(buttonCode) {
@@ -256,32 +227,25 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		}
 		return false;
 	}
-
+	// Unused Controller input functions
 	@Override
 	public boolean povMoved(Controller controller, int povCode,
 			PovDirection value) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean xSliderMoved(Controller controller, int sliderCode,
 			boolean value) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean ySliderMoved(Controller controller, int sliderCode,
 			boolean value) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
 	@Override
 	public boolean accelerometerMoved(Controller controller,
 			int accelerometerCode, Vector3 value) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
