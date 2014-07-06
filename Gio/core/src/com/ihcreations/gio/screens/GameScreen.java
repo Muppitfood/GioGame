@@ -1,12 +1,15 @@
 package com.ihcreations.gio.screens;
 
+// Local Imports
 import com.ihcreations.gio.Gio;
 import com.ihcreations.gio.characters.Character;
-import com.ihcreations.gio.characters.CharacterState;
+import com.ihcreations.gio.controls.ControlMaps;
 import com.ihcreations.gio.controls.Xbox360Pad;
 
+// Java Imports
 import java.awt.Point;
 
+// LibGDX Imports
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -26,6 +29,7 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 	
 	// Global game variables
 	Character gioman;
+	ControlMaps controls;
 	FPSLogger fps_logger;
 	
 
@@ -36,6 +40,9 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		
 		// Initialize Character
 		gioman = new Character(new Point(100, 100), 30, 30, new Texture(Gdx.files.internal("meatboy.jpg")));
+		
+		// Initialize control maps
+		controls = new ControlMaps(gioman);
 		
 		// Initialize Logger
 		fps_logger = new FPSLogger();
@@ -119,18 +126,17 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		switch(keycode) {
 			case Input.Keys.RIGHT:
 			case Input.Keys.D:
-				gioman.startMovingRight();
+				controls.keyDownRight();
 				break;
 			case Input.Keys.LEFT:
 			case Input.Keys.A:
-				gioman.startMovingLeft();
+				controls.keyDownLeft();
 				break;
 			case Input.Keys.SHIFT_LEFT:
-				gioman.accelerate();
+				controls.speedUp();
 				break;
 			case Input.Keys.SPACE:
-				if(!gioman.isMovingVertical())
-					gioman.startJump();
+				controls.jump();
 				break;
 			default:
 				System.out.println("Unimplemented keycode");
@@ -144,20 +150,17 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		switch(keycode) {
 			case Input.Keys.RIGHT:
 			case Input.Keys.D:
-				if(gioman.getState().getHorizontalDirection() == CharacterState.RIGHT)
-					gioman.stopHorizontalMovement();
+				controls.keyUpRight();
 				break;
 			case Input.Keys.LEFT:
 			case Input.Keys.A:
-				if(gioman.getState().getHorizontalDirection() == CharacterState.LEFT)
-					gioman.stopHorizontalMovement();
+				controls.keyUpLeft();
 				break;
 			case Input.Keys.SHIFT_LEFT:
-				gioman.stopAcceleration();
+				controls.slowDown();
 				break;
 			case Input.Keys.SPACE:
-				if(gioman.getState().isJumping())
-					gioman.getState().setIsJumping(false);
+				controls.stopJump();
 				break;
 			default:
 				System.out.println("Unimplemented keycode release.");
@@ -216,16 +219,24 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonCode) {
-		if (buttonCode == Xbox360Pad.BUTTON_A && !gioman.isMovingVertical()) {
-			gioman.startJump();
+		switch(buttonCode) {
+			case Xbox360Pad.BUTTON_A:
+				controls.jump();
+				break;
+			default:
+				break;
 		}
 		return false;
 	}
 
 	@Override
 	public boolean buttonUp(Controller controller, int buttonCode) {
-		if (buttonCode == Xbox360Pad.BUTTON_A && gioman.getState().isJumping()) {
-			gioman.getState().setIsJumping(false);
+		switch(buttonCode) {
+			case Xbox360Pad.BUTTON_A:
+				controls.stopJump();
+				break;
+			default:
+				break;
 		}
 		return false;
 	}
@@ -233,21 +244,15 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
 		// Moving with Control stick
-		if (axisCode == Xbox360Pad.AXIS_LEFT_X) {
-			if(value > .25) {
-				gioman.startMovingRight();
-			} else if (value < -.25) {
-				gioman.startMovingLeft();
-			} else {
-				gioman.stopHorizontalMovement();
-			}
-		}
-		if (axisCode == Xbox360Pad.AXIS_RIGHT_TRIGGER || axisCode == Xbox360Pad.AXIS_LEFT_TRIGGER) {
-			if(value >= -.25 && value <= .25) {
-				gioman.stopAcceleration();
-			} else {
-				gioman.accelerate();
-			}
+		switch(axisCode) {
+			case Xbox360Pad.AXIS_LEFT_X:
+				controls.leftControlStickHorizontal(value);
+				break;
+			case Xbox360Pad.AXIS_RIGHT_TRIGGER:
+				controls.axisTriggers(value);
+				break;
+			default:
+				break;
 		}
 		return false;
 	}
