@@ -3,7 +3,7 @@ package com.ihcreations.gio.screens;
 import com.ihcreations.gio.Gio;
 import com.ihcreations.gio.characters.Character;
 import com.ihcreations.gio.characters.CharacterState;
-import com.ihcreations.gio.controllers.Xbox360Pad;
+import com.ihcreations.gio.controls.Xbox360Pad;
 
 import java.awt.Point;
 

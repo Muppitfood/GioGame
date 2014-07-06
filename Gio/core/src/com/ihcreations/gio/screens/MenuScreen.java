@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.ihcreations.gio.Gio;
-import com.ihcreations.gio.controllers.Xbox360Pad;
+import com.ihcreations.gio.controls.Xbox360Pad;
 
 
 

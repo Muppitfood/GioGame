@@ -1,4 +1,4 @@
-package com.ihcreations.gio.controllers;
+package com.ihcreations.gio.controls;
 
 import com.badlogic.gdx.controllers.PovDirection;
 
