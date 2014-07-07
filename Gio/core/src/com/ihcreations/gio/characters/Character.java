@@ -6,6 +6,7 @@ package com.ihcreations.gio.characters;
 
 import com.ihcreations.gio.characters.CharacterBody;
 import com.ihcreations.gio.characters.CharacterState;
+import com.ihcreations.gio.utils.GioConstants;
 import com.ihcreations.gio.utils.Physics;
 import com.ihcreations.gio.utils.Point;
 
@@ -17,7 +18,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Character {
 	// Constants
-	public final float JUMP_STRENGTH = 10;
 	public final int JUMP_FRAME_LENGTH = 75;
 	
 	// Member Variables
@@ -88,36 +88,21 @@ public class Character {
 	
 	public void moveRight() {
 		if(this.m_state.isAccelerated() == true) {
-			m_physics.setXVelocity(12);
+			m_physics.setXVelocity(GioConstants.RUNNING_SPEED);
 		} else {
-			m_physics.setXVelocity(6);;
+			m_physics.setXVelocity(GioConstants.WALKING_SPEED);
 		}
 	}
 	public void moveLeft() {
 		if(this.m_state.isAccelerated() == true) {
-			m_physics.setXVelocity(-12);
+			m_physics.setXVelocity(-GioConstants.RUNNING_SPEED);
 		} else {
-			m_physics.setXVelocity(-6);;
-		}
-	}
-	public void moveUp() {
-		this.m_state.m_percent_jumped++;
-		if(this.m_state.m_percent_jumped >= JUMP_FRAME_LENGTH) {
-			m_state.setVerticalDirection(CharacterState.DOWN);
-			m_state.setIsJumping(false);
-		}
-	}
-	public void moveDown() {
-		this.m_state.m_percent_jumped--;
-		if(this.m_state.m_percent_jumped <= 0) {
-			m_state.setVerticalDirection(CharacterState.STATIONARY);
+			m_physics.setXVelocity(-GioConstants.WALKING_SPEED);
 		}
 	}
 	
 	public void startJump() {
-		this.m_state.setIsJumping(true);
-		this.m_state.setVerticalDirection(CharacterState.UP);
-		this.m_physics.setYVelocity(10);
+		this.m_physics.setYVelocity(GioConstants.JUMP_SPEED);
 	}
 	public int getJumpDirection() {
 		return this.m_state.getVerticalDirection();
@@ -126,9 +111,12 @@ public class Character {
 		this.m_state.setHorizontalDirection(CharacterState.STATIONARY);
 		this.m_physics.setXVelocity(0);
 	}
+	public void taperJump() {
+		if(this.m_physics.yVelocity() > GioConstants.TAPER_SPEED && !(this.m_physics.yVelocity() <= 0)) {
+			this.m_physics.setYVelocity(5);
+		}
+	}
 	public void stopVerticalMovement() {
-		this.m_state.setVerticalDirection(CharacterState.STATIONARY);
-		this.m_state.setIsJumping(false);
 		this.m_physics.setYVelocity(0);
 	}
 	public boolean isMovingHorizontal() {
@@ -160,27 +148,27 @@ public class Character {
 					break;
 			}
 		}
-		if(this.isMovingVertical()) {
-			if(this.m_state.isJumping()) {
-				this.moveUp();
-			} else {
-				this.moveDown();
-			}
-		}
 	}
 	
 	public void updatePhysics() {
-		if(this.m_body.m_center.y > 100) {
+		this.m_body.m_center.x += this.m_physics.xVelocity();
+		
+		if(this.m_body.m_center.y > GioConstants.FLOOR_HEIGHT) {
 			Physics.gravity(this.m_physics);
 		}
-		this.m_body.m_center.x += this.m_physics.xVelocity();
+		
 		this.m_body.m_center.y += this.m_physics.yVelocity();
-		if(this.m_body.m_center.y < 100) {
-			this.m_body.m_center.y = 100;
+		if(this.m_body.m_center.y < GioConstants.FLOOR_HEIGHT && this.m_physics.yVelocity() <= 0) {
+			this.m_body.m_center.y = GioConstants.FLOOR_HEIGHT;
+			this.m_physics.setYVelocity(0);
 		}
 	}
 	
 	public CharacterState getState() {
 		return this.m_state;
+	}
+	
+	public CharacterPhysics getPhysics() {
+		return this.m_physics;
 	}
 }

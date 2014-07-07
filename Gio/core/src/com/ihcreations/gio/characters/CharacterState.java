@@ -36,9 +36,6 @@ public class CharacterState {
 	public int getVerticalDirection() {
 		return this.m_vertical_direction;
 	}
-	public void setVerticalDirection(int vertical_direction) {
-		this.m_vertical_direction = vertical_direction;
-	}
 	public boolean isJumping() {
 		return this.m_is_jumping;
 	}

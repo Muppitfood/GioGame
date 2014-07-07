@@ -14,15 +14,13 @@ public class ControlMaps {
 	}
 	
 	public void jump() {
-		if(!this.m_gioman.isMovingVertical()) {
+		if(this.m_gioman.getPhysics().yVelocity() == 0) {
 			this.m_gioman.startJump();
 		}
 	}
 	
 	public void stopJump() {
-		if(m_gioman.getState().isJumping()) {
-			m_gioman.getState().setIsJumping(false);
-		}
+		this.m_gioman.taperJump();
 	}
 	
 	public void keyDownRight() {
