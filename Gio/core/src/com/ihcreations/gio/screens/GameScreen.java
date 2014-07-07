@@ -5,9 +5,7 @@ import com.ihcreations.gio.Gio;
 import com.ihcreations.gio.characters.Character;
 import com.ihcreations.gio.controls.ControlMaps;
 import com.ihcreations.gio.controls.Xbox360Pad;
-
-// Java Imports
-import java.awt.Point;
+import com.ihcreations.gio.utils.Point;
 
 // LibGDX Imports
 import com.badlogic.gdx.Gdx;
@@ -31,7 +29,6 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 	Character gioman;
 	ControlMaps controls;
 	FPSLogger fps_logger;
-	
 
 	// When game screen is first started
 	public GameScreen(final Gio game) {
@@ -39,7 +36,7 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 		this.m_game = game;
 		
 		// Initialize Character
-		gioman = new Character(new Point(100, 100), 30, 30, new Texture(Gdx.files.internal("meatboy.jpg")));
+		gioman = new Character(new Point(100, 600), 30, 30, new Texture(Gdx.files.internal("meatboy.jpg")));
 		
 		// Initialize control maps
 		controls = new ControlMaps(gioman);
@@ -72,13 +69,14 @@ public class GameScreen implements Screen, ControllerListener, InputProcessor {
 				gioman.getWidth(), 
 				gioman.getHeight());
 		m_game.batch.end();
-		
 		m_game.floor.begin(ShapeType.Line);
 		m_game.floor.line(0, 100, Gdx.graphics.getWidth(), 100);
 		m_game.floor.end();
 		
 		// Move Gioman
 		gioman.updateMovement();
+		
+		gioman.updatePhysics();
 		
 		// Log Framerate
 		fps_logger.log();

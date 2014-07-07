@@ -6,10 +6,8 @@ package com.ihcreations.gio.characters;
 
 import com.ihcreations.gio.characters.CharacterBody;
 import com.ihcreations.gio.characters.CharacterState;
-
-// Java Imports
-import java.awt.Point;
-
+import com.ihcreations.gio.utils.Physics;
+import com.ihcreations.gio.utils.Point;
 
 
 
@@ -19,7 +17,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Character {
 	// Constants
-	public final int JUMP_FRAME_LENGTH = 30;
+	public final float JUMP_STRENGTH = 10;
+	public final int JUMP_FRAME_LENGTH = 75;
 	
 	// Member Variables
 	// --------------------
@@ -29,31 +28,37 @@ public class Character {
 	// Movement
 	private CharacterState m_state;
 	
+	// Physics
+	private CharacterPhysics m_physics;
+	
 	// Member functions
 	// --------------------
 	// Constructors
 	public Character() {
 		this.m_body = new CharacterBody();
 		this.m_state = new CharacterState();
+		this.m_physics = new CharacterPhysics(true);
 	}
 	public Character(Point center, int height, int width, Texture sprite) {
 		this.m_body = new CharacterBody(center, height, width, sprite);
 		this.m_state = new CharacterState();
+		this.m_physics = new CharacterPhysics(true);
 	}
-	public Character(int x, int y, int height, int width, Texture sprite) {
+	public Character(float x, float y, int height, int width, Texture sprite) {
 		this.m_body = new CharacterBody(x, y, height, width, sprite);
 		this.m_state = new CharacterState();
+		this.m_physics = new CharacterPhysics(true);
 	}
 	
 	// Get/Sets for Member Variables
-	public int getHeight() {
+	public float getHeight() {
 		return m_body.m_height;
 	}
 	public void setHeight(int height) {
 		this.m_body.m_height = height;
 	}
 	
-	public int getWidth() {
+	public float getWidth() {
 		return this.m_body.m_width;
 	}
 	public void setWidth(int width) {
@@ -83,20 +88,19 @@ public class Character {
 	
 	public void moveRight() {
 		if(this.m_state.isAccelerated() == true) {
-			this.m_body.m_center.x += 6;
+			m_physics.setXVelocity(12);
 		} else {
-			this.m_body.m_center.x += 3;
+			m_physics.setXVelocity(6);;
 		}
 	}
 	public void moveLeft() {
 		if(this.m_state.isAccelerated() == true) {
-			this.m_body.m_center.x -= 6;
+			m_physics.setXVelocity(-12);
 		} else {
-			this.m_body.m_center.x -= 3;
+			m_physics.setXVelocity(-6);;
 		}
 	}
 	public void moveUp() {
-		this.m_body.m_center.y += 5;
 		this.m_state.m_percent_jumped++;
 		if(this.m_state.m_percent_jumped >= JUMP_FRAME_LENGTH) {
 			m_state.setVerticalDirection(CharacterState.DOWN);
@@ -104,7 +108,6 @@ public class Character {
 		}
 	}
 	public void moveDown() {
-		this.m_body.m_center.y -= 5;
 		this.m_state.m_percent_jumped--;
 		if(this.m_state.m_percent_jumped <= 0) {
 			m_state.setVerticalDirection(CharacterState.STATIONARY);
@@ -114,16 +117,19 @@ public class Character {
 	public void startJump() {
 		this.m_state.setIsJumping(true);
 		this.m_state.setVerticalDirection(CharacterState.UP);
+		this.m_physics.setYVelocity(10);
 	}
 	public int getJumpDirection() {
 		return this.m_state.getVerticalDirection();
 	}
 	public void stopHorizontalMovement() {
 		this.m_state.setHorizontalDirection(CharacterState.STATIONARY);
+		this.m_physics.setXVelocity(0);
 	}
 	public void stopVerticalMovement() {
 		this.m_state.setVerticalDirection(CharacterState.STATIONARY);
 		this.m_state.setIsJumping(false);
+		this.m_physics.setYVelocity(0);
 	}
 	public boolean isMovingHorizontal() {
 		return this.m_state.getHorizontalDirection() != CharacterState.STATIONARY;
@@ -162,6 +168,18 @@ public class Character {
 			}
 		}
 	}
+	
+	public void updatePhysics() {
+		if(this.m_body.m_center.y > 100) {
+			Physics.gravity(this.m_physics);
+		}
+		this.m_body.m_center.x += this.m_physics.xVelocity();
+		this.m_body.m_center.y += this.m_physics.yVelocity();
+		if(this.m_body.m_center.y < 100) {
+			this.m_body.m_center.y = 100;
+		}
+	}
+	
 	public CharacterState getState() {
 		return this.m_state;
 	}
